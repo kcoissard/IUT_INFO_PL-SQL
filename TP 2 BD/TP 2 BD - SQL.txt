@@ -1,0 +1,32 @@
+create table PIECE 
+(NOP number(3), DESIGNATION varchar2(20), COULEUR varchar(15), POIDS number(5,2),
+constraint pk_PIECE_NOP primary key (NOP),
+constraint ck_couleurs_RVBJ check(COULEUR='ROUGE' or COULEUR='VERT' or COULEUR='BLEU' or COULEUR='JAUNE'));
+
+create table SERVICE 
+(NOS number(3), INTITULE varchar2(20), LOCALISATION varchar2 (30),
+constraint pk_SERVICE_NOS primary key (NOS));
+
+create table ORDRE
+(NOP number(3), NOS number(3), QUANTITE number(3),
+constraint pk_ORDRE_NOP_NOS primary key (NOP,NOS),
+constraint fk_ORDRE_NOP foreign key (NOP) references PIECE(NOP),
+constraint fk_ORDRE_NOS foreign key (NOP) references SERVICE(NOS));
+
+create table NOMENCLATURE
+(NOPA number(3), NOPC number(3), QUANTITE number(3),
+constraint pk_NOMENCLATURE_NOPA_NOPC primary key (NOPA, NOPC),
+constraint fk_NOMENCLATURE_NOPA foreign key (NOPA) references PIECE(NOP),
+constraint fk_NOMENCLATURE_NOPC foreign key (NOPC) references PIECE(NOP));
+
+ALTER TABLE piece modify designation varchar2(30);
+ALTER TABLE service modify intitule varchar2(30);
+ALTER TABLE service modify localisation varchar2(20);
+ALTER TABLE service add directeur varchar2(20);
+ALTER TABLE service DROP COLUMN localisation;
+--PAS possible de suppr la clé primaire, d'autres clés étrangères pointent dessus
+ALTER TABLE PIECE DROP CONSTRAINT ck_couleurs_RVBJ;
+drop table nomenclature;
+drop table ORDRE cascade constraint;
+select * from piece;
+select * from service;));

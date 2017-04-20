@@ -1,0 +1,57 @@
+CREATE table emp as select * from scott.emp;
+
+
+-- QUESTION 1
+update emp set sal=0 where job='SALESMAN';
+
+-- QUESTION 2
+select ename, job, sal from emp order by job desc;
+
+-- QUESTION 3
+rollback;
+
+-- QUESTION 4
+update emp set sal=sal + (select sal from emp where ename ='KING')*5/100 where job ='MANAGER';
+
+-- QUESTION 5
+select ename, job, sal from emp order by job desc;
+
+-- QUESTION 6
+rollback;
+
+-- QUESTION 7
+insert into salgrade select deptno as grade, min(sal) as losal, max(sal) as hisal from emp group by deptno;
+
+-- QUESTION 8
+select * from salgrade;
+
+-- QUESTION 9
+rollback;
+
+-- QUESTION 10
+create view Aemp as select avg(sal) as salmoyen, deptno from emp group by deptno;
+select * from AEMP;
+delete from emp where empno in (select emp.empno from emp, Aemp where Aemp.deptno=emp.deptno and emp.sal<Aemp.salmoyen);
+select * from emp;
+
+-- QUESTION 11
+create view empManager as select * from emp where job='MANAGER';
+
+-- QUESTION 12;
+update empManager set sal=sal*110/100;
+select * from empManager;
+
+-- QUESTION 13
+select * from emp;
+
+-- QUESTION 14
+rollback;
+select * from emp;
+
+-- QUESTION 15
+drop view empManager;
+/* 
+12. Augmenter les salaires des managers de 10% en utilisant cette vue  
+13. Vérifier que les modifications ont été prises en compte dans la table EMP  
+14. Faire un rollback et regarder l'état de la table EMP  
+15. Supprimer la vue vue _manager : */ 

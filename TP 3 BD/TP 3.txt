@@ -1,0 +1,111 @@
+TP 3 pl/sql
+
+Exo 1
+a)
+
+set serveroutput on
+DECLARE
+v_nom emp.ename%TYPE;
+v_sal emp.sal%TYPE;
+v_empno emp.empno%TYPE;
+v_moyenne NUMBER(12,5);
+
+BEGIN
+v_empno := &v_empno;
+SELECT avg(emp.sal)  INTO v_moyenne 
+FROM emp 
+WHERE emp.job=(select job from emp where empno=v_empno);
+DBMS_OUTPUT.PUT_LINE(v_moyenne);
+
+END;
+
+b)
+set serveroutput on
+DECLARE
+v_nom emp.ename%TYPE;
+v_sal emp.sal%TYPE;
+v_empno emp.empno%TYPE;
+v_moyenne NUMBER(12,5);
+
+BEGIN
+v_empno := &v_empno;
+SELECT avg(emp.sal) INTO v_moyenne 
+FROM emp 
+WHERE emp.job=(select job from emp where empno=v_empno);
+
+SELECT sal INTO v_sal
+FROM emp
+WHERE empno = v_empno;
+
+IF v_sal<v_moyenne THEN v_sal:=v_moyenne;
+ELSE v_sal := v_sal*1.1;
+END IF;
+commit;
+DBMS_OUTPUT.PUT_LINE(v_sal);
+
+END;
+
+
+Exo 2
+-- Faire un bloc PL/SQL permettant d’obtenir la factorielle d’un entier saisi au clavier. 
+-- 0! = 1, 1! = 1,
+-- 1*2*3*4 = 24
+
+set serveroutput on
+DECLARE
+  v_entier NUMBER(8);
+  v_i number(8);
+  v_fact number(12);
+BEGIN
+    v_entier:=&v_entier;
+
+ v_fact:=1; -- NE PAS OUBLIER LA PUTIN DE RACE D'INITIALISER CE QUE TU VEUX AFFICGHER
+  
+   IF v_entier<2 THEN
+    v_fact:=1;
+  ELSE
+  
+  FOR v_i IN 1..v_entier LOOP
+    v_fact:=v_fact*v_i;
+    DBMS_OUTPUT.PUT_LINE (v_fact); 
+  END LOOP;
+  
+  END IF;
+
+
+END;
+
+EXO 3
+--Soit la table PERSONNEL (Nom, Role) qui rassemble les membres du personnel d'un cirque. 
+-- On souhaite déterminer la proportion de jongleurs parmi eux.  
+-- 1. Créer et alimenter cette table avec un jeu de données. 
+-- 2. Ecrire un bloc PL/SQL anonyme permettant de :  
+-- • compter le nombre de n-uplets dans la table PERSONNEL et stocker le résultat dans une variable ; 
+-- • compter le nombre d'employés dont le role est « Jongleur » dans la table PERSONNEL et stocker le résultat dans une deuxième variable ; 
+-- • calculer la proportion (en pourcentage), stocker le résultat dans une troisième variable et afficher le résultat à l'écran. 
+
+create table PERSONNEL
+(v_nom VARCHAR2(15), v_role varchar2(20),
+constraint pk_PERSONNEL_v_nom primary key (v_nom));
+
+INSERT INTO PERSONNEL VALUES ('martin','glandalf');
+INSERT INTO PERSONNEL VALUES ('marion','princesseKiTourne');
+INSERT INTO PERSONNEL VALUES ('jeremie','mcBoulette');
+INSERT INTO PERSONNEL VALUES ('kevin','chevalierLongDuZboub');
+INSERT INTO PERSONNEL VALUES ('fanny','princesseKiTourne');
+INSERT INTO PERSONNEL VALUES ('guillaume','filsDeBaron');
+
+select count (*) from PERSONNEL;
+
+set serveroutput on
+DECLARE
+v_princesse VARCHAR2(20);
+
+BEGIN
+v_princesse:=1;
+SELECT COUNT (*)  INTO v_princesse
+FROM PERSONNEL 
+WHERE v_role='princesseKiTourne';
+DBMS_OUTPUT.PUT_LINE(v_princesse);
+
+END;
